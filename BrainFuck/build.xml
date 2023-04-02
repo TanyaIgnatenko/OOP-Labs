@@ -1,0 +1,104 @@
+	<project name="BrainFuck" default="all" >
+
+		<property name="src.dir" value="src"/>
+		<property name="tests.dir" value="tests"/>
+		<property name="classes.dir" value="classes"/>
+		<property name="tests.classes.dir" value="classes"/>
+		<property name="resource.dir" value="resource"/>
+		<property name="jar.dir" value="jar"/>
+
+		<path id="classpath.tests">
+			<pathelement location="lib/junit-4.12.jar"/>
+			<pathelement location="lib/hamcrest-core-1.3.jar"/>
+			<pathelement location="${classes.dir}"/>
+		</path>
+		
+		<path id="classpath.logging">
+			<pathelement location="lib/log4j-1.2.17.jar"/>
+			<pathelement location="${resource.dir}"/>
+		</path>
+
+		<path id="classpath.tests.run">
+			<pathelement location="lib/junit-4.12.jar"/>
+			<pathelement location="lib/hamcrest-core-1.3.jar"/>
+			<pathelement location="lib/log4j-1.2.17.jar"/>
+			<pathelement location="${resource.dir}"/>
+			<pathelement location="${classes.dir}"/>
+			<pathelement location="${tests.classes.dir}/"/>
+		</path>
+
+		<target name="compile.src">
+			<mkdir dir="${classes.dir}"/>
+			<javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false">
+				<classpath refid="classpath.logging"/>
+			</javac>
+		</target>
+
+		<target name="compile.tests" depends="compile.src">
+			<mkdir dir="${tests.classes.dir}"/>
+			<javac srcdir="${tests.dir}" destdir="${tests.classes.dir}" includeantruntime="false">
+				<classpath refid="classpath.tests"/>
+			</javac>
+		</target>
+
+
+		<target name="jar" depends="compile.src">
+			<mkdir dir="${jar.dir}"/>
+			<mkdir dir="${jar.dir}/resource"/>
+			<copy file="resource/config.txt" todir="${jar.dir}/resource"/>
+			<copy file="resource/hello.bf" todir="${jar.dir}/resource"/>
+
+			<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+				<manifest>
+					<attribute name="Main-Class" value="ru.nsu.ignatenko.brainfuck.Interpreter"/>
+					<attribute name="Class-Path" value="../lib/log4j-1.2.17.jar ../${resource.dir}/"/>
+				</manifest>
+				<fileset dir="jar" includes="resource/**" />
+			</jar>
+
+		</target>
+
+		<target name="mkdir.log">
+			<mkdir dir="log"/>
+		</target>
+
+		<target name="run.program" depends="jar, mkdir.log">
+			<java jar="${jar.dir}/${ant.project.name}.jar" fork="true">
+
+					<arg value="${arg0}"/>
+					<arg value="${arg1}"/>
+			</java>
+		</target>
+
+	<target name="run.tests" depends="compile.tests, compile.src, mkdir.log">
+			<junit printsummary="on" haltonfailure="yes" fork="true">
+				<classpath refid="classpath.tests.run"/>
+				<formatter type="plain" usefile="false" />
+				<batchtest>
+					<fileset dir="${tests.classes.dir}">
+						<include name="**/*Test.class" />
+					</fileset>
+				</batchtest>
+			</junit>
+	</target>
+
+	<target name="all" depends="run.tests"/>
+
+	<target name="clean">
+			<delete dir="${classes.dir}"/>
+			<delete dir="${jar.dir}"/>
+			<delete dir="log"/>
+	</target>
+
+</project>
+
+
+
+
+
+
+
+
+
+
+
