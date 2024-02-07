@@ -54,7 +54,7 @@ public class Clyde implements Ghost,  ActionListener
 
     private Timer timer1 = new Timer(7000, this);
     private Timer timer2 = new Timer(10000, this);
-    MovableObject pacman;
+    PacMan pacman;
 
     public Clyde(ScreenData screenData_[], int nrow_, int ncollumn_, int blocksize_, int x, int y)
     {
@@ -128,6 +128,12 @@ public class Clyde implements Ghost,  ActionListener
         posY = coordY / blocksize;
         pos = posY * ncollumn + posX;
         return pos;
+    }
+
+    public int getPosX() {return posX;}
+
+    public int getPosY() {
+        return posY;
     }
 
     public void setVictim(PacMan pacman_)
