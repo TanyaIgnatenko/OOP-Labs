@@ -7,7 +7,7 @@ import javax.swing.Timer;
 
 import java.util.Random;
 
-public class Blinky implements Ghost, ActionListener, MovableObject
+public class Blinky implements Ghost, ActionListener
 {
 	private final String name = "Blinky";
 

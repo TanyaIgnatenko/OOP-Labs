@@ -14,6 +14,8 @@ public interface Ghost
     public void setScatterMode();
     public void setStartPos(int posX, int posY);
     public int getPos();
+    public int getPosX();
+    public int getPosY();
     public int getCoordX();
     public int getCoordY();
     public Mode getMode();
